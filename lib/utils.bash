@@ -39,7 +39,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	url="$GH_REPO/releases/download/v${version}/protoc-gen-validate-${version}-$(get_platform)-$(get_arch).tar.gz"
+	url="$GH_REPO/releases/download/v${version}/protoc-gen-validate_${version}-$(get_platform)-$(get_arch).tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -62,7 +62,7 @@ get_arch() {
   # On ARM Macs, uname -m returns "arm64", but in protoc releases this architecture is called "aarch_64"
   if [[ "${os}" == "Darwin" && "${arch}" == "arm64" ]]; then
     # echo "aarch_64"
-    echo "x86_64"
+    echo "arm64"
   elif [[ "${os}" == "Linux" && "${arch}" == "aarch64" ]]; then
     # echo "aarch_64"
     echo "x86_64"
