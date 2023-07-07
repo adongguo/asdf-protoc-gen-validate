@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for protoc-gen-validate.
 GH_REPO="https://github.com/bufbuild/protoc-gen-validate"
 TOOL_NAME="protoc-gen-validate"
 TOOL_TEST="protoc-gen-validate --help"
@@ -31,7 +30,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
 	# Change this function if protoc-gen-validate has other means of determining installable versions.
 	list_github_tags
 }
@@ -41,11 +39,36 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for protoc-gen-validate
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	url="$GH_REPO/releases/download/v${version}/protoc-gen-validate-${version}-$(get_platform)-$(get_arch).tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+}
+
+get_platform() {
+  local os=$(uname)
+  if [[ "${os}" == "Darwin" ]]; then
+    echo "darwin"
+  elif [[ "${os}" == "Linux" ]]; then
+    echo "linux"
+  else
+    echo >&2 "unsupported os: ${os}" && exit 1
+  fi
+}
+
+get_arch() {
+  local os=$(uname)
+  local arch=$(uname -m)
+  # On ARM Macs, uname -m returns "arm64", but in protoc releases this architecture is called "aarch_64"
+  if [[ "${os}" == "Darwin" && "${arch}" == "arm64" ]]; then
+    # echo "aarch_64"
+    echo "x86_64"
+  elif [[ "${os}" == "Linux" && "${arch}" == "aarch64" ]]; then
+    # echo "aarch_64"
+    echo "x86_64"
+  else
+    echo "${arch}"
+  fi
 }
 
 install_version() {
@@ -61,7 +84,6 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert protoc-gen-validate executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
