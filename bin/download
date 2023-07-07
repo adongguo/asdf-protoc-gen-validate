@@ -10,7 +10,8 @@ source "${plugin_dir}/lib/utils.bash"
 
 mkdir -p "$ASDF_DOWNLOAD_PATH"
 
-release_file="$ASDF_DOWNLOAD_PATH/protoc-gen-validate_$ASDF_INSTALL_VERSION_$(get_platform)_$(get_arch).tar.gz"
+install_version="$ASDF_INSTALL_VERSION"
+release_file="$ASDF_DOWNLOAD_PATH/protoc-gen-validate_${install_version}_$(get_platform)_$(get_arch).tar.gz"
 echo "release_file $release_file"
 echo "ASDF_DOWNLOAD_PATH $ASDF_DOWNLOAD_PATH"
 
