@@ -39,7 +39,7 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	url="$GH_REPO/releases/download/v${version}/protoc-gen-validate_${version}-$(get_platform)-$(get_arch).tar.gz"
+	url="$GH_REPO/releases/download/v${version}/protoc-gen-validate_${version}_$(get_platform)_$(get_arch).tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
